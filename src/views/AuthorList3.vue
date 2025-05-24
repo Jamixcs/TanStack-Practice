@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import { useQuery } from '@tanstack/vue-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 
 const router = useRouter()
 const errorMessage = ref(null)
@@ -22,21 +22,34 @@ async function fetchAuthorsData() {
   }
 }
 
+const { data, isError, fetchStatus } = useQuery({
+  queryKey: ['authorData'],
+  queryFn: fetchAuthorsData,
+})
+
 async function updateAuthorsData(data) {
   try {
     console.log('Page 3 >>>>>>>> updateAuthorsData called')
-    const response = await axios.post('https://fakerestapi.azurewebsites.net/api/v1/Authors', data)
+    const response = await axios.put(
+      `https://fakerestapi.azurewebsites.net/api/v1/Authors/${data.id}`,
+      data,
+    )
 
+    console.log('Page 3 >>>>>>>> updated author!!')
     return response.data
   } catch (error) {
     errorMessage.value = error.message
     console.error(error)
   }
 }
+// const queryClient = useQueryClient()
 
-const { data, isError, fetchStatus } = useQuery({
-  queryKey: ['authorData'],
-  queryFn: fetchAuthorsData,
+const { mutate } = useMutation({
+  mutationFn: (newData) => updateAuthorsData(newData),
+  // 如果要即時 fetch 資料
+  // onSuccess: () => {
+  //   queryClient.invalidateQueries({ queryKey: ['authorData'] })
+  // },
 })
 
 const localAuthors = ref([])
@@ -51,17 +64,22 @@ watch(
   { immediate: true },
 )
 
-const editingIndex = ref(null)
-const buttonAction = ref('Edit')
+const editingAuthorId = ref(null)
 
-function buttonHandler(index, action, data) {
-  if (action === 'Edit') {
-    editingIndex.value = index
-    buttonAction.value = 'Save'
-  } else {
-    updateAuthorsData(data)
-    editingIndex.value = null
-    buttonAction.value = 'Edit'
+function editHandler(authorId) {
+  try {
+    editingAuthorId.value = authorId
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function saveHandler(authorData) {
+  try {
+    mutate(authorData)
+    editingAuthorId.value = null
+  } catch (error) {
+    console.error(error)
   }
 }
 
@@ -101,7 +119,7 @@ function onBack() {
           <td class="border border-gray-300 px-4 py-2">{{ author.id + 1 }}</td>
           <td class="border border-gray-300 px-4 py-2">
             <input
-              v-if="editingIndex?.id === author.id"
+              v-if="editingAuthorId === author.id"
               v-model="author.firstName"
               class="border border-gray-300 px-2 py-1 rounded w-full"
             />
@@ -109,7 +127,7 @@ function onBack() {
           </td>
           <td class="border border-gray-300 px-4 py-2">
             <input
-              v-if="editingIndex?.id === author.id"
+              v-if="editingAuthorId === author.id"
               v-model="author.lastName"
               class="border border-gray-300 px-2 py-1 rounded w-full"
             />
@@ -118,10 +136,9 @@ function onBack() {
           <td class="border border-gray-300 px-4 py-2">
             <button
               class="text-blue-500 hover:text-blue-700 p-1 rounded-md"
-              @click="buttonHandler(author, buttonAction, author)"
-              aria-label="Edit"
+              @click="editingAuthorId === author.id ? saveHandler(author) : editHandler(author.id)"
             >
-              {{ buttonAction }}
+              {{ editingAuthorId === author.id ? 'Save' : 'Edit' }}
             </button>
           </td>
         </tr>
