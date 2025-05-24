@@ -9,14 +9,19 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue'),
     },
     {
-      path: '/page1',
+      path: '/authorList1',
       name: 'page1',
-      component: () => import('../views/Page1View.vue'),
+      component: () => import('../views/AuthorList1.vue'),
     },
     {
-      path: '/page2',
+      path: '/authorList2',
       name: 'page2',
-      component: () => import('../views/Page2View.vue'),
+      component: () => import('../views/AuthorList2.vue'),
+    },
+    {
+      path: '/authorList3',
+      name: 'page3',
+      component: () => import('../views/AuthorList3.vue'),
     },
   ],
 })
