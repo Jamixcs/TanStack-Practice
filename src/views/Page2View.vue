@@ -41,7 +41,12 @@ function onBack() {
 
 <template>
   <div>
-    <button @click="onBack">Back</button>
+    <button
+      class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded"
+      @click="onBack"
+    >
+      Back
+    </button>
     <div class="flex justify-center items-center" v-if="fetchStatus === 'fetching'">
       <div
         class="w-20 h-20 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"
