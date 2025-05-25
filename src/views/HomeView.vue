@@ -10,7 +10,7 @@
     <RouterLink
       to="/authorList2"
       class="inline-block rounded bg-pink-400 px-4 py-2 font-semibold text-white transition duration-200 hover:bg-pink-500"
-      >Author List 2 - GET, PUT</RouterLink
+      >Author List 2 - GET, PUT, DELETE</RouterLink
     >
   </div>
 </template>
