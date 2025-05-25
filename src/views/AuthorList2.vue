@@ -1,8 +1,8 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { get, put } from '../utilities/api/vueQuery.js'
-import { fetchAuthors, updateAuthor } from '../utilities/api/author.js'
+import { get, put, del } from '../utilities/api/vueQuery.js'
+import { fetchAuthors, updateAuthor, deleteAuthor } from '../utilities/api/author.js'
 import { useQueryClient } from '@tanstack/vue-query'
 
 const localAuthors = ref([])
@@ -12,7 +12,13 @@ const { data, isError, fetchStatus } = get(['authorData'], fetchAuthors)
 
 const queryClient = useQueryClient()
 
-const { mutate } = put(updateAuthor, {
+const { mutate: updateMutate } = put(updateAuthor, {
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['authorData'] })
+  },
+})
+
+const { mutate: deleteMutate } = del(deleteAuthor, {
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ['authorData'] })
   },
@@ -35,7 +41,14 @@ function editHandler(authorId) {
 }
 
 function saveHandler(authorData) {
-  mutate(authorData)
+  updateMutate(authorData)
+  editingAuthorId.value = null
+}
+
+function deleteHandler(authorId) {
+  localAuthors.value = localAuthors.value.filter((author) => author.id !== authorId)
+
+  deleteMutate(authorId)
   editingAuthorId.value = null
 }
 
@@ -68,6 +81,7 @@ function onBack() {
           <th class="border border-gray-300 px-4 py-2 text-left">First Name</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Last Name</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Edit</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -95,6 +109,14 @@ function onBack() {
               @click="editingAuthorId === author.id ? saveHandler(author) : editHandler(author.id)"
             >
               {{ editingAuthorId === author.id ? 'Save' : 'Edit' }}
+            </button>
+          </td>
+          <td class="border border-gray-300 px-4 py-2">
+            <button
+              class="rounded-md p-1 text-red-500 hover:text-red-700"
+              @click="deleteHandler(author.id)"
+            >
+              Delete
             </button>
           </td>
         </tr>

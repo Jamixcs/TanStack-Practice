@@ -15,3 +15,10 @@ export function put(fn, optionParams) {
   })
 }
 
+export function del(fn, optionParams) {
+  return useMutation({
+    mutationFn: (newData) => fn(newData),
+    ...optionParams
+  })
+}
+
