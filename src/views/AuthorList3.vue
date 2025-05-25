@@ -91,21 +91,21 @@ function onBack() {
 <template>
   <div>
     <button
-      class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded"
+      class="rounded bg-pink-400 px-4 py-2 font-bold text-white hover:bg-pink-500"
       @click="onBack"
     >
       Back
     </button>
     <div
-      class="flex justify-center items-center"
+      class="flex items-center justify-center"
       v-if="fetchStatus === 'fetching' && localAuthors.length === 0"
     >
       <div
-        class="w-20 h-20 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"
+        class="h-20 w-20 animate-spin rounded-full border-4 border-yellow-500 border-t-transparent"
       ></div>
     </div>
     <span v-else-if="isError" class="text-red-500">Error: {{ errorMessage }}</span>
-    <table v-if="localAuthors" class="table-auto w-full border-collapse border border-gray-300">
+    <table v-if="localAuthors" class="w-full table-auto border-collapse border border-gray-300">
       <thead>
         <tr class="bg-gray-100">
           <th class="border border-gray-300 px-4 py-2 text-left">#</th>
@@ -121,7 +121,7 @@ function onBack() {
             <input
               v-if="editingAuthorId === author.id"
               v-model="author.firstName"
-              class="border border-gray-300 px-2 py-1 rounded w-full"
+              class="w-full rounded border border-gray-300 px-2 py-1"
             />
             <span v-else>{{ author.firstName }}</span>
           </td>
@@ -129,13 +129,13 @@ function onBack() {
             <input
               v-if="editingAuthorId === author.id"
               v-model="author.lastName"
-              class="border border-gray-300 px-2 py-1 rounded w-full"
+              class="w-full rounded border border-gray-300 px-2 py-1"
             />
             <span v-else>{{ author.lastName }}</span>
           </td>
           <td class="border border-gray-300 px-4 py-2">
             <button
-              class="text-blue-500 hover:text-blue-700 p-1 rounded-md"
+              class="rounded-md p-1 text-blue-500 hover:text-blue-700"
               @click="editingAuthorId === author.id ? saveHandler(author) : editHandler(author.id)"
             >
               {{ editingAuthorId === author.id ? 'Save' : 'Edit' }}
