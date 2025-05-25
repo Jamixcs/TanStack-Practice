@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { get, put } from '../utilities/api/vueQuery.js'
-import { fetchAuthors, updateAuthors } from '../utilities/api/author.js'
+import { fetchAuthors, updateAuthor } from '../utilities/api/author.js'
 import { useQueryClient } from '@tanstack/vue-query'
 
 const localAuthors = ref([])
@@ -12,7 +12,7 @@ const { data, isError, fetchStatus } = get(['authorData'], fetchAuthors)
 
 const queryClient = useQueryClient()
 
-const { mutate } = put(updateAuthors, {
+const { mutate } = put(updateAuthor, {
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ['authorData'] })
   },
