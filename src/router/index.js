@@ -18,11 +18,6 @@ const router = createRouter({
       name: 'page2',
       component: () => import('../views/AuthorList2.vue'),
     },
-    {
-      path: '/authorList3',
-      name: 'page3',
-      component: () => import('../views/AuthorList3.vue'),
-    },
   ],
 })
 

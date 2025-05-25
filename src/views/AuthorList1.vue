@@ -1,31 +1,11 @@
 <script setup>
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
-import { useQuery } from '@tanstack/vue-query'
+import { get } from '../utilities/api/vueQuery.js'
+import { fetchAuthors } from '../utilities/api/author.js'
 
 const router = useRouter()
-const errorMessage = ref(null)
 
-async function fetchAuthorsData() {
-  try {
-    console.log(
-      'Page 1 >>>>>>>> fetchAuthorsData called (staleTime = 0, refetch on window focus triggers fetch)',
-    )
-    const response = await axios.get('https://fakerestapi.azurewebsites.net/api/v1/Authors')
-
-    console.log(response.data)
-    return response.data
-  } catch (error) {
-    errorMessage.value = error.message
-    console.error(error)
-  }
-}
-
-const { data, isError, fetchStatus, status } = useQuery({
-  queryKey: ['authorData'],
-  queryFn: fetchAuthorsData,
-})
+const { data, fetchStatus, isError } = get(['authorData'], fetchAuthors)
 
 function onBack() {
   router.back()
@@ -45,7 +25,7 @@ function onBack() {
         class="h-20 w-20 animate-spin rounded-full border-4 border-yellow-500 border-t-transparent"
       ></div>
     </div>
-    <span v-else-if="isError" class="text-red-500">Error: {{ errorMessage }}</span>
+    <p v-else-if="isError" class="text-red-500">isError: {{ isError }}</p>
     <table v-if="data" class="w-full table-auto border-collapse border border-gray-300">
       <thead>
         <tr class="bg-gray-100">
