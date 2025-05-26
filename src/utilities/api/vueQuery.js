@@ -10,14 +10,14 @@ export function get(key, fn, optionParams) {
 
 export function put(fn, optionParams) {
   return useMutation({
-    mutationFn: (newData) => fn(newData),
+    mutationFn: fn,
     ...optionParams
   })
 }
 
 export function del(fn, optionParams) {
   return useMutation({
-    mutationFn: (newData) => fn(newData),
+    mutationFn: fn,
     ...optionParams
   })
 }

@@ -1,11 +1,10 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { get } from '../utilities/api/vueQuery.js'
-import { fetchAuthors } from '../utilities/api/author.js'
+import { fetchAuthors } from '../utilities/api/author/authorQuery.js'
 
 const router = useRouter()
 
-const { data, fetchStatus, isError } = get(['authorData'], fetchAuthors)
+const { data, fetchStatus, isError } = fetchAuthors()
 
 function onBack() {
   router.back()

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export async function fetchAuthors() {
+export async function fetchAuthorsApi() {
   try {
     console.log('fetchAuthors called')
     const response = await axios.get('https://fakerestapi.azurewebsites.net/api/v1/Authors')
@@ -11,7 +11,7 @@ export async function fetchAuthors() {
   }
 }
 
-export async function updateAuthor(data) {
+export async function updateAuthorApi(data) {
   try {
     console.log('updateAuthor called')
     const response = await axios.put(
@@ -25,7 +25,7 @@ export async function updateAuthor(data) {
   }
 }
 
-export async function deleteAuthor(id) {
+export async function deleteAuthorApi(id) {
   try {
     console.log('deleteAuthor called')
     const response = await axios.delete(

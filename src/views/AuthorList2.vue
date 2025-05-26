@@ -1,28 +1,15 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { get, put, del } from '../utilities/api/vueQuery.js'
-import { fetchAuthors, updateAuthor, deleteAuthor } from '../utilities/api/author.js'
-import { useQueryClient } from '@tanstack/vue-query'
+import { fetchAuthors, updateAuthor, deleteAuthor } from '../utilities/api/author/authorQuery.js'
 
 const localAuthors = ref([])
 const router = useRouter()
 
-const { data, isError, fetchStatus } = get(['authorData'], fetchAuthors)
+const { data, isError, fetchStatus, refetch: refetchAuthors } = fetchAuthors()
 
-const queryClient = useQueryClient()
-
-const { mutate: updateMutate } = put(updateAuthor, {
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['authorData'] })
-  },
-})
-
-const { mutate: deleteMutate } = del(deleteAuthor, {
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['authorData'] })
-  },
-})
+const { mutate: executeUpdateAuthor } = updateAuthor({onSuccess: refetchAuthors})
+const { mutate: executeDeleteAuthor } = deleteAuthor({onSuccess: refetchAuthors})
 
 const editingAuthorId = ref(null)
 
@@ -41,14 +28,14 @@ function editHandler(authorId) {
 }
 
 function saveHandler(authorData) {
-  updateMutate(authorData)
+  executeUpdateAuthor(authorData)
   editingAuthorId.value = null
 }
 
 function deleteHandler(authorId) {
   localAuthors.value = localAuthors.value.filter((author) => author.id !== authorId)
 
-  deleteMutate(authorId)
+  executeDeleteAuthor(authorId)
   editingAuthorId.value = null
 }
 
