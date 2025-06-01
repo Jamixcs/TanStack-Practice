@@ -2,14 +2,13 @@
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { fetchAuthors, updateAuthor, deleteAuthor } from '../utilities/api/author/authorQuery.js'
-
 const localAuthors = ref([])
 const router = useRouter()
 
 const { data, isError, fetchStatus, refetch: refetchAuthors } = fetchAuthors()
 
-const { mutate: executeUpdateAuthor } = updateAuthor({onSuccess: refetchAuthors})
-const { mutate: executeDeleteAuthor } = deleteAuthor({onSuccess: refetchAuthors})
+const { mutate: executeUpdateAuthor } = updateAuthor({ onSuccess: refetchAuthors })
+const { mutate: executeDeleteAuthor } = deleteAuthor({ onSuccess: refetchAuthors })
 
 const editingAuthorId = ref(null)
 
