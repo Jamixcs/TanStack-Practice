@@ -8,6 +8,7 @@ const router = useRouter()
 const { data, isError, fetchStatus, refetch: refetchAuthors } = fetchAuthors()
 
 const { mutate: executeUpdateAuthor } = updateAuthor({ onSuccess: refetchAuthors })
+// onSuccess 是個 callback，當 updateAuthor 成功時就會被觸發，也就是我先送參數給 mutate 去執行 useMutation，然後並設置了一個機制是成功後重新發 refetch api
 const { mutate: executeDeleteAuthor } = deleteAuthor({ onSuccess: refetchAuthors })
 
 const editingAuthorId = ref(null)
